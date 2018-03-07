@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans    
+                        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+                        http://www.springframework.org/schema/context    
+                        http://www.springframework.org/schema/context/spring-context-4.0.xsd 
+				        http://www.springframework.org/schema/rabbit  
+				        http://www.springframework.org/schema/rabbit/spring-rabbit-1.4.xsd">
+
+	<context:component-scan base-package="com.tbj.producer"></context:component-scan>
+
+	<!-- 定义连接工厂,用于创建连接等 -->
+	<rabbit:connection-factory id="connectionFactory"
+		username="guest" password="guest" host="localhost" port="5672" />
+
+	<!-- 定义admin,producer中的exchange,queue会自动的利用该admin自动在spring中生成 -->
+	<rabbit:admin id="connAdmin" connection-factory="connectionFactory" />
+
+	<!-- 定义rabbitmq模板,用于接收以及发送消息 -->
+	<rabbit:template id="amqpTemplate" connection-factory="connectionFactory"
+		exchange="directExchange" />
+
+	<!-- exclusive:是否为当前连接的专用队列，在连接断开后，会自动删除该队列，生产环境中应该很少用到吧。 -->
+	<rabbit:queue name="repay" auto-delete="false"
+		declared-by="connAdmin" durable="true" exclusive="false" auto-declare="true" />
+
+	<!-- 定义Exchange,并且将队列与Exchange绑定,设定Routing Key -->
+	<rabbit:direct-exchange name="directExchange"
+		durable="true" declared-by="connAdmin" auto-delete="false">
+		<rabbit:bindings>
+			<rabbit:binding key="repay" queue="repay"></rabbit:binding>
+		</rabbit:bindings>
+	</rabbit:direct-exchange>
+
+	<!-- 定义消费者,消费消息 -->
+	<!-- <bean id="directConsumer" class="com.tbj.comsumer.DirectConsumer"></bean>
+	<bean id="repayConsumer" class="com.tbj.comsumer.RepayConsumer"></bean> -->
+
+	<!--开启监听,也可以理解为: 将消费者与队列进行绑定,这样就会在,当队列有消息的时候,会由绑定的消费者来进行消费, 也可以算是指定消费者来监听指定的队列.当有消息到达的时候,通知消费者进行消费 -->
+	<!-- <rabbit:listener-container connection-factory="connectionFactory" acknowledge="manual"> 
+		 <rabbit:listener ref="directConsumer" queues="repay"/>
+		 <rabbit:listener ref="repayConsumer" queues="repay"/>  
+	</rabbit:listener-container> -->
+</beans>

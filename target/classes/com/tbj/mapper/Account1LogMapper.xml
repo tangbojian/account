@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tbj.mapper.Account1LogMapper">
+	
+	<insert id="insert">
+		insert into account1_log (major_key, company_id, money, create_time) values (#{key}, #{companyId}, #{money}, now())
+	</insert>
+	
+	<select id="countByKey" resultType="int">
+		select count(1) from account1_log where major_key = #{key}
+	</select>
+	
+</mapper>

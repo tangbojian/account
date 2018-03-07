@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tbj.mapper.Account1Mapper">
+	
+	<update id="update">
+		update account1 
+		set balance = balance + #{balance} 
+		where company_id = #{companyId}
+	</update>
+	
+</mapper>

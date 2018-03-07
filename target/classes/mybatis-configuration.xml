@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<!-- 
+	    plugins在配置文件中的位置必须符合要求，否则会报错，顺序如下:
+	    properties?, settings?, 
+	    typeAliases?, typeHandlers?, 
+	    objectFactory?,objectWrapperFactory?, 
+	    plugins?, 
+	    environments?, databaseIdProvider?, mappers?
+	-->
+	
+	<settings>
+		<setting name="logImpl" value="LOG4J" />
+		<!-- 通过将这个属性配置为true可以自动将以下划线方式命名的数据库列映射到Java对象 的驼峰式命名属性中。这个属性默认是false -->
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+		<!-- 如果将这个参数设置为false,那么后面就算配置了二级缓存也不会生效.这个值默认是true -->
+		<setting name="cacheEnabled" value="true" />
+	</settings>
+
+	<typeAliases>
+		<package name="com.tbj.bean" />
+	</typeAliases>
+
+	<plugins>
+		<plugin interceptor="com.github.pagehelper.PageInterceptor"/>
+	</plugins>
+
+
+</configuration>
